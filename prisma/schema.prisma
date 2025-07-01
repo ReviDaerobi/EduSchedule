@@ -1,0 +1,45 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Class {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  description String?
+  schedules   Schedule[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Schedule {
+  id             Int      @id @default(autoincrement())
+  classId        Int
+  title          String
+  type           ScheduleType
+  date           DateTime
+  startTime      DateTime
+  endTime        DateTime
+  room           String?
+  lecturer       String?
+  description    String?  @db.Text
+  materialUrl    String?
+  submissionLink String?
+  class          Class    @relation(fields: [classId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+enum ScheduleType {
+  LECTURE
+  QUIZ
+  EXAM
+  ASSIGNMENT
+  PRACTICAL
+}
