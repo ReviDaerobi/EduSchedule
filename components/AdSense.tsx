@@ -7,7 +7,7 @@ interface AdSenseProps {
   className?: string;
 }
 
-const AdSense: React.FC<AdSenseProps> = ({
+const Adsense: React.FC<AdSenseProps> = ({
   adSlot,
   adFormat = 'auto',
   fullWidthResponsive = true,
@@ -36,4 +36,4 @@ const AdSense: React.FC<AdSenseProps> = ({
   );
 };
 
-export default AdSense;
+export default Adsense;

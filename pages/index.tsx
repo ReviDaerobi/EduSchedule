@@ -18,7 +18,6 @@ export default function Home() {
   useEffect(() => {
     fetchClasses();
   }, []);
-
   const fetchClasses = async () => {
     try {
       const response = await fetch('/api/classes');
