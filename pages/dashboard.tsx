@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Calendar from '../components/Calendar';
 import ScheduleModal from '../components/ScheduleModal';
@@ -35,30 +35,7 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  useEffect(() => {
-    if (classId) {
-      fetchData();
-    }
-  }, [classId]);
-
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      await Promise.all([
-        fetchClassData(),
-        fetchSchedules()
-      ]);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setError('Gagal memuat data. Silakan coba lagi.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchClassData = async () => {
+  const fetchClassData = useCallback(async () => {
     try {
       const response = await fetch(`/api/classes/${classId}`);
       
@@ -82,9 +59,9 @@ export default function Dashboard() {
       console.error('Error fetching class data:', error);
       throw error;
     }
-  };
+  }, [classId]);
 
-  const fetchSchedules = async () => {
+  const fetchSchedules = useCallback(async () => {
     try {
       const response = await fetch(`/api/classes/${classId}/schedules`);
       
@@ -108,7 +85,30 @@ export default function Dashboard() {
       console.error('Error fetching schedules:', error);
       throw error;
     }
-  };
+  }, [classId]);
+
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      await Promise.all([
+        fetchClassData(),
+        fetchSchedules()
+      ]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError('Gagal memuat data. Silakan coba lagi.');
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchClassData, fetchSchedules]);
+
+  useEffect(() => {
+    if (classId) {
+      fetchData();
+    }
+  }, [classId, fetchData]);
 
   const getUpcomingSchedules = () => {
     const today = new Date();

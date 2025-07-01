@@ -3,6 +3,58 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Define interfaces for type safety
+interface ScheduleFromDB {
+  id: number;
+  title: string;
+  type: string;
+  date: Date;
+  startTime: string;
+  endTime: string;
+  room: string | null;
+  lecturer: string | null;
+  description: string | null;
+  materialUrl: string | null;
+  submissionLink: string | null;
+  class: {
+    id: number;
+    name: string;
+    description: string | null;
+  };
+}
+
+interface FormattedSchedule {
+  id: number;
+  title: string;
+  type: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  room: string | null;
+  lecturer: string | null;
+  description: string | null;
+  materialUrl: string | null;
+  submissionLink: string | null;
+  class: {
+    id: number;
+    name: string;
+    description: string | null;
+  };
+}
+
+interface CreateScheduleBody {
+  title: string;
+  type: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  room?: string;
+  lecturer?: string;
+  description?: string;
+  materialUrl?: string;
+  submissionLink?: string;
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
   const classId = parseInt(id as string);
@@ -43,8 +95,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ]
         });
 
-        // Format data untuk frontend
-        const formattedSchedules = schedules.map((schedule: { id: any; title: any; type: any; date: { toISOString: () => string; }; startTime: any; endTime: any; room: any; lecturer: any; description: any; materialUrl: any; submissionLink: any; class: any; }) => ({
+        // Format data untuk frontend dengan proper typing
+        const formattedSchedules: FormattedSchedule[] = schedules.map((schedule: ScheduleFromDB) => ({
           id: schedule.id,
           title: schedule.title,
           type: schedule.type,
@@ -74,7 +126,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           description, 
           materialUrl, 
           submissionLink 
-        } = req.body;
+        }: CreateScheduleBody = req.body;
         
         // Validasi field yang wajib
         if (!title || !type || !date || !startTime || !endTime) {
@@ -133,7 +185,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
 
         // Format response
-        const formattedSchedule = {
+        const formattedSchedule: FormattedSchedule = {
           id: newSchedule.id,
           title: newSchedule.title,
           type: newSchedule.type,
