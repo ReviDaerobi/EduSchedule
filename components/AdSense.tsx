@@ -27,7 +27,7 @@ const Adsense: React.FC<AdSenseProps> = ({
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX" // Ganti dengan Publisher ID Anda
+        data-ad-client="ca-pub-8956614521375236" // Ganti dengan Publisher ID Anda
         data-ad-slot={adSlot}
         data-ad-format={adFormat}
         data-full-width-responsive={fullWidthResponsive}

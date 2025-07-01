@@ -7,7 +7,7 @@ export default function Document() {
         {/* Google AdSense */}
         <script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8956614521375236 "
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8956614521375236"
           crossOrigin="anonymous"
         ></script>
       </Head>
