@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { motion, Variants } from 'framer-motion';
-import AdSense from '../components/Adsense'; // Sesuaikan path komponen
+import AdSense from '../components/AdSense'; // Sesuaikan path komponen
 
 interface Class {
   id: number;
