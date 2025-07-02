@@ -5,11 +5,37 @@ const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
-  const scheduleId = parseInt(id as string);
+  
+  // Debug logging untuk melihat nilai id yang diterima
+  console.log('Received id parameter:', id);
+  console.log('Type of id:', typeof id);
+  console.log('Query object:', req.query);
 
-  if (isNaN(scheduleId)) {
-    return res.status(400).json({ error: 'Invalid schedule ID' });
+  // Validasi id parameter
+  if (!id) {
+    return res.status(400).json({ error: 'Schedule ID is required' });
   }
+
+  // Handle jika id adalah array (Next.js query bisa jadi array)
+  const idString = Array.isArray(id) ? id[0] : id;
+  
+  // Validasi apakah id adalah string yang bisa dikonversi ke number
+  if (typeof idString !== 'string' || idString.trim() === '') {
+    return res.status(400).json({ error: 'Invalid schedule ID format' });
+  }
+
+  const scheduleId = parseInt(idString, 10);
+
+  // Validasi hasil parsing
+  if (isNaN(scheduleId) || scheduleId <= 0) {
+    return res.status(400).json({ 
+      error: 'Invalid schedule ID', 
+      received: idString,
+      parsed: scheduleId 
+    });
+  }
+
+  console.log('Parsed schedule ID:', scheduleId);
 
   try {
     switch (req.method) {
@@ -39,8 +65,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           title: schedule.title,
           type: schedule.type,
           date: schedule.date.toISOString().split('T')[0],
-          startTime: schedule.startTime,
-          endTime: schedule.endTime,
+          startTime: schedule.startTime.toISOString().split('T')[1].slice(0, 8), // Format HH:MM:SS
+          endTime: schedule.endTime.toISOString().split('T')[1].slice(0, 8),
           room: schedule.room,
           lecturer: schedule.lecturer,
           description: schedule.description,
@@ -85,9 +111,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           }
         }
 
-        // Validasi waktu jika diberikan
-        const newStartTime = startTime || existingSchedule.startTime;
-        const newEndTime = endTime || existingSchedule.endTime;
+        // Validasi dan konversi waktu
+        let newStartTime = existingSchedule.startTime;
+        let newEndTime = existingSchedule.endTime;
+
+        if (startTime) {
+          // Jika startTime adalah string format HH:MM, gabungkan dengan tanggal
+          if (typeof startTime === 'string' && startTime.match(/^\d{2}:\d{2}(:\d{2})?$/)) {
+            const dateStr = date || existingSchedule.date.toISOString().split('T')[0];
+            newStartTime = new Date(`${dateStr}T${startTime}`);
+          } else {
+            newStartTime = new Date(startTime);
+          }
+        }
+
+        if (endTime) {
+          // Jika endTime adalah string format HH:MM, gabungkan dengan tanggal
+          if (typeof endTime === 'string' && endTime.match(/^\d{2}:\d{2}(:\d{2})?$/)) {
+            const dateStr = date || existingSchedule.date.toISOString().split('T')[0];
+            newEndTime = new Date(`${dateStr}T${endTime}`);
+          } else {
+            newEndTime = new Date(endTime);
+          }
+        }
         
         if (newStartTime >= newEndTime) {
           return res.status(400).json({ 
@@ -103,8 +149,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             title: title || existingSchedule.title,
             type: type || existingSchedule.type,
             date: date ? new Date(date) : existingSchedule.date,
-            startTime: startTime || existingSchedule.startTime,
-            endTime: endTime || existingSchedule.endTime,
+            startTime: newStartTime,
+            endTime: newEndTime,
             room: room !== undefined ? room : existingSchedule.room,
             lecturer: lecturer !== undefined ? lecturer : existingSchedule.lecturer,
             description: description !== undefined ? description : existingSchedule.description,
@@ -128,8 +174,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           title: updatedSchedule.title,
           type: updatedSchedule.type,
           date: updatedSchedule.date.toISOString().split('T')[0],
-          startTime: updatedSchedule.startTime,
-          endTime: updatedSchedule.endTime,
+          startTime: updatedSchedule.startTime.toISOString().split('T')[1].slice(0, 8),
+          endTime: updatedSchedule.endTime.toISOString().split('T')[1].slice(0, 8),
           room: updatedSchedule.room,
           lecturer: updatedSchedule.lecturer,
           description: updatedSchedule.description,
@@ -167,7 +213,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } catch (error) {
     console.error('API Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
   } finally {
     await prisma.$disconnect();
   }
