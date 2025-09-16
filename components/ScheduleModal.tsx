@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { format } from 'path';
 
 interface Schedule {
   id: number;
@@ -176,9 +177,16 @@ export default function ScheduleModal({ schedule, onClose }: ScheduleModalProps)
               </div>
               <div>
                 <p className="text-sm text-gray-600">Waktu</p>
-                <p className="font-semibold text-gray-900">
-                  {formatTime(schedule.startTime)} - {formatTime(schedule.endTime)}
-                </p>
+                if (schedule.type === 'LECTURE' || schedule.type === 'PRACTICAL' || schedule.type === 'EXAM' || schedule.type === 'QUIZ') {
+                  
+                  <p className="font-semibold text-gray-900">
+                    {formatTime(schedule.startTime)} - {formatTime(schedule.endTime)}
+                  </p>
+                } else {
+                  <p className="font-semibold text-gray-900">
+                    {formatTime(schedule.startTime)} - {formatDate(schedule.endTime)} {formatTime(schedule.endTime)}
+                  </p>
+                }
               </div>
             </div>
 
