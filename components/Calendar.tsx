@@ -23,6 +23,29 @@ interface CalendarProps {
 }
 
 export default function Calendar({ schedules, currentDate, onDateChange, onScheduleClick }: CalendarProps) {
+  
+  // FormatTime
+   const formatTime = (timeString: string) => {
+      try {
+          // Untuk format: "2025-09-16 10:00:00"
+          if (timeString.includes(' ')) {
+            const timePart = timeString.split(' ')[1]; // Ambil "10:00:00"
+            return timePart.substring(0, 5); // Ambil "10:00"
+          }
+          
+          // Untuk format: "2025-09-16T10:00:00.000Z"
+          if (timeString.includes('T')) {
+            const timePart = timeString.split('T')[1]; // Ambil "10:00:00.000Z"
+            return timePart.substring(0, 5); // Ambil "10:00"
+          }
+          
+          return timeString;
+        } catch (error) {
+          console.error('Error formatting time:', error);
+          return timeString;
+        }
+    };
+
   const [viewDate, setViewDate] = useState(currentDate);
 
   const monthNames = [
@@ -214,7 +237,7 @@ export default function Calendar({ schedules, currentDate, onDateChange, onSched
                               {schedule.title}
                             </div>
                             <div className="text-xs opacity-90">
-                              {schedule.startTime}
+                              {formatTime(schedule.startTime)}
                             </div>
                           </motion.div>
                         ))}
