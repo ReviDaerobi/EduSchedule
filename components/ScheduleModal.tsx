@@ -20,6 +20,7 @@ interface ScheduleModalProps {
 }
 
 export default function ScheduleModal({ schedule, onClose }: ScheduleModalProps) {
+
   const getTypeConfig = (type: string) => {
     const configs = {
       LECTURE: {
@@ -72,6 +73,29 @@ export default function ScheduleModal({ schedule, onClose }: ScheduleModalProps)
   };
 
   const typeConfig = getTypeConfig(schedule.type);
+
+  // Format
+
+    const formatTime = (timeString: string) => {
+      try {
+          // Untuk format: "2025-09-16 10:00:00"
+          if (timeString.includes(' ')) {
+            const timePart = timeString.split(' ')[1]; // Ambil "10:00:00"
+            return timePart.substring(0, 5); // Ambil "10:00"
+          }
+          
+          // Untuk format: "2025-09-16T10:00:00.000Z"
+          if (timeString.includes('T')) {
+            const timePart = timeString.split('T')[1]; // Ambil "10:00:00.000Z"
+            return timePart.substring(0, 5); // Ambil "10:00"
+          }
+          
+          return timeString;
+        } catch (error) {
+          console.error('Error formatting time:', error);
+          return timeString;
+        }
+    };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -153,7 +177,7 @@ export default function ScheduleModal({ schedule, onClose }: ScheduleModalProps)
               <div>
                 <p className="text-sm text-gray-600">Waktu</p>
                 <p className="font-semibold text-gray-900">
-                  {schedule.startTime} - {schedule.endTime}
+                  {formatTime(schedule.startTime)} - {formatTime(schedule.endTime)}
                 </p>
               </div>
             </div>
