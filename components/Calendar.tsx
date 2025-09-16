@@ -236,9 +236,7 @@ export default function Calendar({ schedules, currentDate, onDateChange, onSched
                             <div className="truncate">
                               {schedule.title}
                             </div>
-                            <div className="text-xs opacity-90">
-                              {formatTime(schedule.startTime)}
-                            </div>
+                        
                           </motion.div>
                         ))}
                         
