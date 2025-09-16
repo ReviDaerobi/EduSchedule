@@ -133,7 +133,7 @@ export const schedulesApi = {
   },
 };
 
-// General schedules API (if you need to get all schedules across all classes)
+// General schedules API 
 export const allSchedulesApi = {
   // Get all schedules from all classes
   getAll: (): Promise<Schedule[]> => {

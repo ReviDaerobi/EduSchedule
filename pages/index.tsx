@@ -357,19 +357,6 @@ export default function Home() {
           </p>
         </motion.div>
 
-        {/* AdSense Banner - Top */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="mb-12"
-        >
-          <AdSense 
-            adSlot="1234567890"
-            className="text-center"
-          />
-        </motion.div>
-
         {/* Universal Calendar Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
