@@ -35,6 +35,27 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   const [currentDate, setCurrentDate] = useState(new Date());
 
+   const formatTime = (timeString: string) => {
+    try {
+        // Untuk format: "2025-09-16 10:00:00"
+        if (timeString.includes(' ')) {
+          const timePart = timeString.split(' ')[1]; // Ambil "10:00:00"
+          return timePart.substring(0, 5); // Ambil "10:00"
+        }
+        
+        // Untuk format: "2025-09-16T10:00:00.000Z"
+        if (timeString.includes('T')) {
+          const timePart = timeString.split('T')[1]; // Ambil "10:00:00.000Z"
+          return timePart.substring(0, 5); // Ambil "10:00"
+        }
+        
+        return timeString;
+      } catch (error) {
+        console.error('Error formatting time:', error);
+        return timeString;
+      }
+  };
+
   const fetchClassData = useCallback(async () => {
     try {
       const response = await fetch(`/api/classes/${classId}`);
@@ -299,7 +320,7 @@ export default function Dashboard() {
                           {schedule.title}
                         </p>
                         <p className="text-sm text-gray-600">
-                          {schedule.startTime} - {schedule.endTime}
+                          {formatTime(schedule.startTime)} - {formatTime(schedule.endTime)}
                         </p>
                       </div>
                     </div>
