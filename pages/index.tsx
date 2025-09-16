@@ -59,14 +59,23 @@ export default function Home() {
   // Atau jika mau manual parsing:
   const formatTime = (timeString: string) => {
     try {
-      const date = new Date(timeString);
-      const hours = date.getHours().toString().padStart(2, '0');
-      const minutes = date.getMinutes().toString().padStart(2, '0');
-      return `${hours}:${minutes}`;
-    } catch (error) {
-      console.error('Error formatting time:', error);
-      return timeString;
-    }
+        // Untuk format: "2025-09-16 10:00:00"
+        if (timeString.includes(' ')) {
+          const timePart = timeString.split(' ')[1]; // Ambil "10:00:00"
+          return timePart.substring(0, 5); // Ambil "10:00"
+        }
+        
+        // Untuk format: "2025-09-16T10:00:00.000Z"
+        if (timeString.includes('T')) {
+          const timePart = timeString.split('T')[1]; // Ambil "10:00:00.000Z"
+          return timePart.substring(0, 5); // Ambil "10:00"
+        }
+        
+        return timeString;
+      } catch (error) {
+        console.error('Error formatting time:', error);
+        return timeString;
+      }
   };
 
   useEffect(() => {
