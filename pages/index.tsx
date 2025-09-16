@@ -48,7 +48,7 @@ export default function Home() {
       return date.toLocaleTimeString('id-ID', {
         hour: '2-digit',
         minute: '2-digit',
-        hour12: true // false untuk format 24 jam (10:00), true untuk AM/PM (10:00 AM)
+        hour12: false // false untuk format 24 jam (10:00), true untuk AM/PM (10:00 AM)
       });
     } catch (error) {
       console.error('Error formatting time:', error);
