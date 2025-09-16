@@ -41,6 +41,34 @@ export default function Home() {
   const [calendarView, setCalendarView] = useState<'month' | 'week'>('month');
   const router = useRouter();
 
+  // Fungsi untuk format waktu - hanya ambil jam dan menit
+  const formatTime = (timeString: string) => {
+    try {
+      const date = new Date(timeString);
+      return date.toLocaleTimeString('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false // false untuk format 24 jam (10:00), true untuk AM/PM (10:00 AM)
+      });
+    } catch (error) {
+      console.error('Error formatting time:', error);
+      return timeString; // fallback ke string asli jika error
+    }
+  };
+
+  // Atau jika mau manual parsing:
+  // const formatTime = (timeString: string) => {
+  //   try {
+  //     const date = new Date(timeString);
+  //     const hours = date.getHours().toString().padStart(2, '0');
+  //     const minutes = date.getMinutes().toString().padStart(2, '0');
+  //     return `${hours}:${minutes}`;
+  //   } catch (error) {
+  //     console.error('Error formatting time:', error);
+  //     return timeString;
+  //   }
+  // };
+
   useEffect(() => {
     fetchClasses();
     fetchAllSchedules();
@@ -400,7 +428,8 @@ export default function Home() {
                               </div>
                             </div>
                             <div className="text-right">
-                              <p className="text-xs font-medium">{schedule.startTime}</p>
+                              {/* DISINI YANG DIUBAH - Pakai formatTime */}
+                              <p className="text-xs font-medium">{formatTime(schedule.startTime)}</p>
                               <p className="text-xs opacity-75">{schedule.room}</p>
                             </div>
                           </div>
@@ -444,7 +473,8 @@ export default function Home() {
                                   day: 'numeric'
                                 })}
                               </p>
-                              <p className="text-xs opacity-75">{schedule.startTime}</p>
+                              {/* DISINI JUGA DIUBAH - Pakai formatTime */}
+                              <p className="text-xs opacity-75">{formatTime(schedule.startTime)}</p>
                             </div>
                           </div>
                         </div>
@@ -574,8 +604,6 @@ export default function Home() {
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 opacity-0 hover:opacity-100 transition-opacity duration-300" />
                 </motion.div>
-
-               
               </div>
             ))}
           </div>
