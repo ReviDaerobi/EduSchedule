@@ -493,19 +493,6 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* AdSense antara sections */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="mb-12"
-        >
-          <AdSense 
-            adSlot="0987654321"
-            className="text-center"
-          />
-        </motion.div>
-
         {/* Class Selection */}
         <motion.div
           variants={containerVariants}
@@ -588,36 +575,10 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 opacity-0 hover:opacity-100 transition-opacity duration-300" />
                 </motion.div>
 
-                {/* AdSense antara cards (setiap 2 cards) */}
-                {index === 1 && classes.length > 2 && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.8 }}
-                    className="mt-8"
-                  >
-                    <AdSense 
-                      adSlot="0987654321"
-                      className="text-center"
-                    />
-                  </motion.div>
-                )}
+               
               </div>
             ))}
           </div>
-        </motion.div>
-
-        {/* AdSense Banner - Bottom */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.0, duration: 0.6 }}
-          className="mt-16 mb-8"
-        >
-          <AdSense 
-            adSlot="1122334455"
-            className="text-center"
-          />
         </motion.div>
 
         {/* Footer */}
