@@ -42,32 +42,32 @@ export default function Home() {
   const router = useRouter();
 
   // Fungsi untuk format waktu - hanya ambil jam dan menit
-  const formatTime = (timeString: string) => {
-    try {
-      const date = new Date(timeString);
-      return date.toLocaleTimeString('id-ID', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false // false untuk format 24 jam (10:00), true untuk AM/PM (10:00 AM)
-      });
-    } catch (error) {
-      console.error('Error formatting time:', error);
-      return timeString; // fallback ke string asli jika error
-    }
-  };
-
-  // Atau jika mau manual parsing:
   // const formatTime = (timeString: string) => {
   //   try {
   //     const date = new Date(timeString);
-  //     const hours = date.getHours().toString().padStart(2, '0');
-  //     const minutes = date.getMinutes().toString().padStart(2, '0');
-  //     return `${hours}:${minutes}`;
+  //     return date.toLocaleTimeString('id-ID', {
+  //       hour: '2-digit',
+  //       minute: '2-digit',
+  //       hour12: false // false untuk format 24 jam (10:00), true untuk AM/PM (10:00 AM)
+  //     });
   //   } catch (error) {
   //     console.error('Error formatting time:', error);
-  //     return timeString;
+  //     return timeString; // fallback ke string asli jika error
   //   }
   // };
+
+  // Atau jika mau manual parsing:
+  const formatTime = (timeString: string) => {
+    try {
+      const date = new Date(timeString);
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+    } catch (error) {
+      console.error('Error formatting time:', error);
+      return timeString;
+    }
+  };
 
   useEffect(() => {
     fetchClasses();
