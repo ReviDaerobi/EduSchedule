@@ -177,16 +177,19 @@ export default function ScheduleModal({ schedule, onClose }: ScheduleModalProps)
               </div>
               <div>
                 <p className="text-sm text-gray-600">Waktu</p>
-                if (schedule.type === 'LECTURE' || schedule.type === 'PRACTICAL' || schedule.type === 'EXAM' || schedule.type === 'QUIZ') {
+                {/* Ternary If */}
+                  {schedule.type === 'LECTURE' || schedule.type === 'PRACTICAL' || schedule.type === 'EXAM' || schedule.type === 'QUIZ' ?
                   
                   <p className="font-semibold text-gray-900">
                     {formatTime(schedule.startTime)} - {formatTime(schedule.endTime)}
                   </p>
-                } else {
+                // Else
+                :
+
                   <p className="font-semibold text-gray-900">
                     {formatTime(schedule.startTime)} - {formatDate(schedule.endTime)} {formatTime(schedule.endTime)}
                   </p>
-                }
+                  }
               </div>
             </div>
 
